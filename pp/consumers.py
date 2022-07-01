@@ -1,6 +1,6 @@
 from channels.consumer import SyncConsumer,AsyncConsumer
 from channels.exceptions import StopConsumer
-
+from time import sleep
 class MySyncConsumer(SyncConsumer):
 
     def websocket_connect(self,event):
@@ -12,10 +12,12 @@ class MySyncConsumer(SyncConsumer):
     def websocket_receive(self,event):
         print("Message Recevived form client ...",event)
         print(event['text'])
-        self.send({
+        for i in range(50):
+            self.send({
             'type':'websocket.send',
-            'text':'I am server Boss'
+            'text':str(i)
         })
+        sleep(5)
     def websocket_disconnect(self,event):
         print("Websocket Disconnected",event)
         raise StopConsumer()
@@ -32,10 +34,12 @@ class MyAsyncConsumer(AsyncConsumer):
     async def websocket_receive(self,event):
         print("Message Recevived form client ...",event)
         print(event['text'])
-        await self.send({
+        for i in range(50):
+            await self.send({
             'type':'websocket.send',
-            'text':'I am server Boss'
+            'text':str(i)
         })
+        sleep(2)
     async def websocket_disconnect(self,event):
         print("Websocket Disconnected",event)
         raise StopConsumer()
